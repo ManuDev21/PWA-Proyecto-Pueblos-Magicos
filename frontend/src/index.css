@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Tema ÍXA · Playa de Isla Mujeres (Caribe mexicano) */
+  --c-primary: #0A7C95;        /* turquesa profundo del mar */
+  --c-primary-light: #14A7C4;  /* turquesa claro */
+  --c-primary-deep: #053C4C;   /* océano profundo */
+  --c-secondary: #F4B740;      /* sol / arena dorada */
+  --c-secondary-light: #FFD56B;
+  --c-accent: #FF6F61;         /* coral */
+  --c-sage: #2FC4B2;           /* aguamarina */
+  --c-cream: #FBF4E4;          /* arena */
+  --c-surface: #0A6E84;
+  --c-text: #FBF4E4;
+  /* Brillos/sombras del tema */
+  --glow-1: rgba(47, 196, 178, 0.4);
+  --glow-2: rgba(20, 167, 196, 0.45);
+  --glow-strong: rgba(47, 196, 178, 0.55);
+  --glass-border: rgba(47, 196, 178, 0.25);
+  /* Colores de opciones del quiz */
+  --opt-1: #FF6F61;
+  --opt-2: #F4B740;
+  --opt-3: #2FC4B2;
+  --opt-4: #0A7C95;
+  --opt-5: #9B59B6;
+  /* Capas del fondo y hero */
+  --bg-radial-1: rgba(47, 196, 178, 0.25);
+  --bg-radial-2: rgba(20, 167, 196, 0.28);
+  --bg-radial-3: rgba(244, 183, 64, 0.12);
+}
+
+/* Tema 4T (colores gubernamentales) */
+[data-theme='4t'] {
+  --c-primary: #611232;
+  --c-primary-light: #9F2241;
+  --c-primary-deep: #4A0E26;
+  --c-secondary: #B38E5D;
+  --c-secondary-light: #C9A96B;
+  --c-accent: #9F2241;
+  --c-sage: #A89968;
+  --c-cream: #F2E9DC;
+  --c-surface: #5A1530;
+  --c-text: #F7EFE4;
+  /* Brillos/sombras del tema (vino/dorado, sin azul) */
+  --glow-1: rgba(179, 142, 93, 0.4);
+  --glow-2: rgba(159, 34, 65, 0.45);
+  --glow-strong: rgba(179, 142, 93, 0.55);
+  --glass-border: rgba(179, 142, 93, 0.28);
+  /* Colores de opciones del quiz (paleta 4T) */
+  --opt-1: #9F2241;
+  --opt-2: #B38E5D;
+  --opt-3: #611232;
+  --opt-4: #7A1A38;
+  --opt-5: #4A0E26;
+  /* Capas del fondo y hero (vino/dorado) */
+  --bg-radial-1: rgba(159, 34, 65, 0.3);
+  --bg-radial-2: rgba(97, 18, 50, 0.35);
+  --bg-radial-3: rgba(179, 142, 93, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Poppins', system-ui, sans-serif;
+  background: var(--c-primary-deep);
+  color: var(--c-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: 'Cinzel', serif;
+}
+
+/* Fondo oceánico (sin iconos): degradado de mar turquesa */
+.bg-mayan,
+.bg-ocean {
+  background-color: var(--c-primary-deep);
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(47, 196, 178, 0.25) 0%, transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(20, 167, 196, 0.28) 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(244, 183, 64, 0.12) 0%, transparent 55%),
+    linear-gradient(160deg, #053C4C 0%, #0A7C95 55%, #0A6E84 100%);
+}
+
+/* Hero con fotografía de playa caribeña */
+.bg-beach-hero {
+  background-image:
+    linear-gradient(180deg, rgba(5, 60, 76, 0.35) 0%, rgba(5, 60, 76, 0.65) 100%),
+    url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Animación de olas suaves */
+@keyframes wave {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(-12px) translateY(4px); }
+}
+
+.text-gradient-gold {
+  background: linear-gradient(120deg, var(--c-secondary), var(--c-secondary-light), #fff6d6, var(--c-secondary));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass {
+  background: rgba(251, 244, 228, 0.08);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(47, 196, 178, 0.25);
+  box-shadow: 0 10px 40px rgba(5, 60, 76, 0.35);
+}
+
+/* Sombras color mar turquesa */
+.shadow-sea {
+  box-shadow: 0 0 0 1px rgba(47, 196, 178, 0.4), 0 12px 45px rgba(20, 167, 196, 0.45);
+}
+.shadow-sea-lg {
+  box-shadow: 0 0 35px rgba(47, 196, 178, 0.55), 0 22px 70px rgba(20, 167, 196, 0.5);
+}
+.ring-sea {
+  border: 2px solid rgba(47, 196, 178, 0.7);
+}
+
+/* Tarjeta con revelado al hacer hover: la imagen se desvanece y aparece info */
+.hover-reveal .reveal-img {
+  transition: opacity 0.5s ease, transform 0.6s ease;
+}
+.hover-reveal:hover .reveal-img {
+  opacity: 0.18;
+  transform: scale(1.12);
+}
+.hover-reveal .reveal-info {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  pointer-events: none;
+}
+.hover-reveal:hover .reveal-info {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+/* Título base visible (sobre la imagen) que se desvanece al hacer hover */
+.hover-reveal .reveal-base {
+  transition: opacity 0.35s ease, transform 0.45s ease;
+}
+.hover-reveal:hover .reveal-base {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+/* Botón con efecto gelatina/3D */
+.btn-jelly {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+}
+.btn-jelly:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+.btn-jelly:active {
+  transform: scale(0.94);
+}
+
+/* Anillo llamativo para el logo de ÍXA (degradado sol-mar + brillo) */
+.logo-ring {
+  padding: 3px;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from 120deg,
+    var(--c-secondary),
+    var(--c-sage),
+    var(--c-primary-light),
+    var(--c-secondary-light),
+    var(--c-secondary)
+  );
+  box-shadow: 0 0 18px rgba(244, 183, 64, 0.55), 0 0 38px rgba(47, 196, 178, 0.45);
+  animation: logo-glow 3.2s ease-in-out infinite;
+}
+@keyframes logo-glow {
+  0%, 100% { box-shadow: 0 0 14px rgba(244, 183, 64, 0.45), 0 0 30px rgba(47, 196, 178, 0.35); }
+  50% { box-shadow: 0 0 26px rgba(244, 183, 64, 0.75), 0 0 52px rgba(47, 196, 178, 0.6); }
+}
+
+/* Los alerts siempre por encima de cualquier capa (partículas, navbar, video) */
+.swal2-container {
+  z-index: 100000 !important;
+}
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--c-primary-deep); }
+::-webkit-scrollbar-thumb { background: var(--c-secondary); border-radius: 8px; }
