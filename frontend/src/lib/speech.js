@@ -13,12 +13,15 @@ export function isSpeechEnabled() {
   return enabled
 }
 
+const LANG_PREFIX = { en: 'en', fr: 'fr', es: 'es' }
+const LANG_LOCALE = { en: 'en-US', fr: 'fr-FR', es: 'es-MX' }
+
 function pickVoice(lang) {
   const voices = window.speechSynthesis?.getVoices() || []
-  const prefix = lang === 'en' ? 'en' : 'es'
+  const prefix = LANG_PREFIX[lang] || 'es'
   // Preferir voces femeninas en el idioma correcto
   return (
-    voices.find((v) => v.lang?.toLowerCase().startsWith(prefix) && /female|mujer|paulina|sabina|google/i.test(v.name)) ||
+    voices.find((v) => v.lang?.toLowerCase().startsWith(prefix) && /female|mujer|paulina|sabina|amelie|aurelie|google/i.test(v.name)) ||
     voices.find((v) => v.lang?.toLowerCase().startsWith(prefix)) ||
     voices[0]
   )
@@ -33,9 +36,9 @@ function doSpeak(text, lang) {
   try {
     window.speechSynthesis.cancel()
     const utter = new SpeechSynthesisUtterance(toSpoken(text))
-    utter.lang = lang === 'en' ? 'en-US' : 'es-MX'
-    // El inglés se lee más despacio para que se entienda bien
-    utter.rate = lang === 'en' ? 0.82 : 0.96
+    utter.lang = LANG_LOCALE[lang] || 'es-MX'
+    // El inglés y el francés se leen más despacio para que se entiendan bien
+    utter.rate = lang === 'en' ? 0.72 : lang === 'fr' ? 0.8 : 0.96
     utter.pitch = 1.08
     const voice = pickVoice(lang)
     if (voice) utter.voice = voice

@@ -37,12 +37,14 @@ export default function ChatbotFlow() {
   const dataRef = useRef({})
   const initedRef = useRef(false) // evita doble presentación (React StrictMode)
 
-  const pushBot = (text) => {
+  // Los mensajes del bot guardan su CLAVE de traducción (+ vars) para poder
+  // re-renderizarse en el idioma elegido en cualquier momento.
+  const pushBot = (key, vars) => {
     setTyping(true)
     setTimeout(() => {
-      setMessages((m) => [...m, { from: 'bot', text }])
+      setMessages((m) => [...m, { from: 'bot', key, vars }])
       setTyping(false)
-      speak(text, lang) // ÍXA lo dice en voz alta
+      speak(t(key, vars), lang) // ÍXA lo dice en voz alta
     }, 700)
   }
 
@@ -50,7 +52,7 @@ export default function ChatbotFlow() {
   useEffect(() => {
     if (initedRef.current) return
     initedRef.current = true
-    pushBot(t('chat.q.nombre'))
+    pushBot('chat.q.nombre')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -79,7 +81,7 @@ export default function ChatbotFlow() {
         if (is_admin) {
           setMessages((m) => [...m, { from: 'user', text: value }])
           setInput('')
-          pushBot(t('chat.admin'))
+          pushBot('chat.admin')
           setTimeout(() => navigate('/admin'), 1400)
           return
         }
@@ -107,10 +109,10 @@ export default function ChatbotFlow() {
     const next = stepIdx + 1
     if (next < STEPS.length) {
       const nextStep = STEPS[next]
-      pushBot(t(nextStep.q, { name: dataRef.current.nombre }))
+      pushBot(nextStep.q, { name: dataRef.current.nombre })
       setStepIdx(next)
     } else {
-      pushBot(t('chat.finish'))
+      pushBot('chat.finish')
       setTimeout(() => navigate('/quiz'), 1800)
     }
   }
@@ -134,7 +136,7 @@ export default function ChatbotFlow() {
               >
                 <IxaAvatar size={84} speaking={i === messages.length - 1 && !typing} />
                 <div className="max-w-[78%] rounded-3xl rounded-bl-sm bg-[var(--c-primary-light)] px-5 py-3 text-[var(--c-cream)] shadow-sea">
-                  {m.text}
+                  {t(m.key, m.vars)}
                 </div>
               </motion.div>
             ) : (

@@ -4,19 +4,38 @@ import {
   PieChart, Pie, Cell, Legend,
 } from 'recharts'
 import { getCharts } from '../../lib/api'
+import { useT } from '../../i18n/useT'
 
-const COLORS = ['#C9A227', '#B5462F', '#7FA88B', '#1B4332', '#8B5A2B', '#D4AF37']
+import { motion } from 'framer-motion'
 
-function Panel({ title, children }) {
+// Paleta playa: turquesa, coral, sol, mar profundo, arena, orquídea
+const COLORS = ['#2FC4B2', '#FF6F61', '#F4B740', '#0A7C95', '#F6D6A8', '#9B59B6']
+
+const tooltipStyle = {
+  background: 'rgba(5,40,50,0.95)',
+  border: '1px solid rgba(47,196,178,0.5)',
+  borderRadius: 14,
+  color: '#F5F0E1',
+}
+
+function Panel({ title, children, delay = 0 }) {
   return (
-    <div className="glass rounded-3xl p-5">
+    <motion.div
+      initial={{ opacity: 0, y: 24, scale: 0.97 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -4 }}
+      className="glass rounded-3xl p-5 shadow-sea transition-shadow hover:shadow-sea-lg"
+    >
       <h3 className="mb-4 font-display text-lg text-[var(--c-secondary)]">{title}</h3>
       <div className="h-64">{children}</div>
-    </div>
+    </motion.div>
   )
 }
 
 export default function ChartsPanel() {
+  const { t } = useT()
   const { data } = useQuery({ queryKey: ['charts'], queryFn: getCharts })
   const perfiles = data?.perfiles_detectados || []
   const categorias = data?.categorias_elegidas || []
@@ -24,14 +43,14 @@ export default function ChartsPanel() {
   const afinidad = data?.afinidad_turistica || []
 
   return (
-    <div className="mt-6 grid gap-5 lg:grid-cols-2">
-      <Panel title="Perfiles más detectados">
+    <div className="mt-6 grid gap-4 sm:gap-5 lg:grid-cols-2">
+      <Panel title={t('admin.chart.perfiles')} delay={0}>
         <ResponsiveContainer>
           <BarChart data={perfiles}>
             <XAxis dataKey="label" tick={{ fill: '#F5F0E1', fontSize: 10 }} />
             <YAxis tick={{ fill: '#F5F0E1' }} allowDecimals={false} />
-            <Tooltip />
-            <Bar dataKey="value" radius={[8, 8, 0, 0]}>
+            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'rgba(47,196,178,0.1)' }} />
+            <Bar dataKey="value" radius={[8, 8, 0, 0]} animationDuration={900}>
               {perfiles.map((_, i) => (
                 <Cell key={i} fill={COLORS[i % COLORS.length]} />
               ))}
@@ -40,7 +59,7 @@ export default function ChartsPanel() {
         </ResponsiveContainer>
       </Panel>
 
-      <Panel title="Distribución de visitantes">
+      <Panel title={t('admin.chart.distribucion')} delay={0.1}>
         <ResponsiveContainer>
           <PieChart>
             <Pie
@@ -55,18 +74,18 @@ export default function ChartsPanel() {
               ))}
             </Pie>
             <Legend wrapperStyle={{ color: '#F5F0E1', fontSize: 11 }} />
-            <Tooltip />
+            <Tooltip contentStyle={tooltipStyle} />
           </PieChart>
         </ResponsiveContainer>
       </Panel>
 
-      <Panel title="Categorías con más experiencias">
+      <Panel title={t('admin.chart.categorias')} delay={0.2}>
         <ResponsiveContainer>
           <BarChart data={categorias} layout="vertical">
             <XAxis type="number" tick={{ fill: '#F5F0E1' }} allowDecimals={false} />
             <YAxis dataKey="label" type="category" tick={{ fill: '#F5F0E1', fontSize: 10 }} width={90} />
-            <Tooltip />
-            <Bar dataKey="value" radius={[0, 8, 8, 0]}>
+            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'rgba(47,196,178,0.1)' }} />
+            <Bar dataKey="value" radius={[0, 8, 8, 0]} animationDuration={900}>
               {categorias.map((_, i) => (
                 <Cell key={i} fill={COLORS[i % COLORS.length]} />
               ))}
@@ -75,13 +94,13 @@ export default function ChartsPanel() {
         </ResponsiveContainer>
       </Panel>
 
-      <Panel title="Afinidad turística (respuestas top)">
+      <Panel title={t('admin.chart.afinidad')} delay={0.3}>
         <ResponsiveContainer>
           <BarChart data={afinidad}>
             <XAxis dataKey="label" tick={{ fill: '#F5F0E1', fontSize: 9 }} />
             <YAxis tick={{ fill: '#F5F0E1' }} allowDecimals={false} />
-            <Tooltip />
-            <Bar dataKey="value" radius={[8, 8, 0, 0]}>
+            <Tooltip contentStyle={tooltipStyle} cursor={{ fill: 'rgba(47,196,178,0.1)' }} />
+            <Bar dataKey="value" radius={[8, 8, 0, 0]} animationDuration={900}>
               {afinidad.map((_, i) => (
                 <Cell key={i} fill={COLORS[i % COLORS.length]} />
               ))}

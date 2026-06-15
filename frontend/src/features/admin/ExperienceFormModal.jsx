@@ -5,6 +5,7 @@ import { X, MapPin, Save } from 'lucide-react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import Button from '../../components/ui/Button'
+import { useT } from '../../i18n/useT'
 
 // Centro por defecto: Isla Mujeres
 const DEFAULT_CENTER = [21.232, -86.731]
@@ -30,6 +31,7 @@ const markerIcon = L.divIcon({
  * luego se reflejan en los enlaces de Google Maps de la vista del usuario.
  */
 export default function ExperienceFormModal({ exp = {}, categorias = [], onSave, onClose }) {
+  const { t } = useT()
   const [form, setForm] = useState({
     nombre: exp.nombre || '',
     descripcion: exp.descripcion || '',
@@ -113,7 +115,7 @@ export default function ExperienceFormModal({ exp = {}, categorias = [], onSave,
       >
         <div className="mb-4 flex items-center justify-between">
           <h3 className="font-display text-xl text-gradient-gold">
-            {exp.id ? 'Editar experiencia' : 'Nueva experiencia'}
+            {exp.id ? t('admin.exp.editTitle') : t('admin.exp.newTitle')}
           </h3>
           <button onClick={onClose} className="rounded-full p-2 text-[var(--c-cream)]/70 hover:bg-white/10">
             <X size={20} />
@@ -122,25 +124,25 @@ export default function ExperienceFormModal({ exp = {}, categorias = [], onSave,
 
         <div className="grid gap-4 md:grid-cols-2">
           <div className="flex flex-col gap-3">
-            <input className={inputCls} placeholder="Nombre" value={form.nombre} onChange={(e) => set('nombre', e.target.value)} />
-            <textarea className={`${inputCls} min-h-[90px]`} placeholder="Descripción" value={form.descripcion} onChange={(e) => set('descripcion', e.target.value)} />
+            <input className={inputCls} placeholder={t('admin.exp.nombre')} value={form.nombre} onChange={(e) => set('nombre', e.target.value)} />
+            <textarea className={`${inputCls} min-h-[90px]`} placeholder={t('admin.exp.descripcion')} value={form.descripcion} onChange={(e) => set('descripcion', e.target.value)} />
             <select className={inputCls} value={form.categoria_id} onChange={(e) => set('categoria_id', e.target.value)}>
               {categorias.map((c) => (
                 <option key={c.id} value={c.id}>{c.nombre}</option>
               ))}
             </select>
             <div className="grid grid-cols-2 gap-3">
-              <input className={inputCls} placeholder="Duración (h)" value={form.duracion_horas} onChange={(e) => set('duracion_horas', e.target.value)} />
-              <input className={inputCls} placeholder="Precio aprox" value={form.precio_aprox} onChange={(e) => set('precio_aprox', e.target.value)} />
+              <input className={inputCls} placeholder={t('admin.exp.duracion')} value={form.duracion_horas} onChange={(e) => set('duracion_horas', e.target.value)} />
+              <input className={inputCls} placeholder={t('admin.exp.precio')} value={form.precio_aprox} onChange={(e) => set('precio_aprox', e.target.value)} />
             </div>
             <input
               className={inputCls}
-              placeholder="URL de imagen"
+              placeholder={t('admin.exp.imagenUrl')}
               value={String(form.imagen_url).startsWith('data:') ? '' : form.imagen_url}
               onChange={(e) => set('imagen_url', e.target.value)}
             />
             <label className="text-xs text-[var(--c-cream)]/70">
-              o subir imagen:
+              {t('admin.exp.subirImagen')}
               <input type="file" accept="image/*" onChange={handleImageFile} className="mt-1 block w-full text-xs" />
             </label>
           </div>
@@ -148,25 +150,25 @@ export default function ExperienceFormModal({ exp = {}, categorias = [], onSave,
           <div className="flex flex-col gap-3">
             <p className="flex items-center gap-2 text-sm text-[var(--c-cream)]/80">
               <MapPin size={15} className="text-[var(--c-accent)]" />
-              Haz clic en el mapa para fijar la ubicación exacta
+              {t('admin.exp.clickMapa')}
             </p>
             <div ref={mapRef} className="h-64 w-full overflow-hidden rounded-2xl border border-[rgba(47,196,178,0.4)]" />
             <div className="grid grid-cols-2 gap-3">
-              <input className={inputCls} placeholder="Latitud" value={form.latitud} onChange={(e) => set('latitud', e.target.value)} />
-              <input className={inputCls} placeholder="Longitud" value={form.longitud} onChange={(e) => set('longitud', e.target.value)} />
+              <input className={inputCls} placeholder={t('admin.exp.latitud')} value={form.latitud} onChange={(e) => set('latitud', e.target.value)} />
+              <input className={inputCls} placeholder={t('admin.exp.longitud')} value={form.longitud} onChange={(e) => set('longitud', e.target.value)} />
             </div>
             <p className="text-[11px] text-[var(--c-cream)]/50">
-              La ubicación se refleja en el enlace de Google Maps que ve el visitante.
+              {t('admin.exp.mapHint')}
             </p>
           </div>
         </div>
 
         <div className="mt-5 flex justify-end gap-3">
           <button onClick={onClose} className="rounded-2xl px-5 py-2 text-sm text-[var(--c-cream)]/80 hover:bg-white/10">
-            Cancelar
+            {t('admin.cancel')}
           </button>
           <Button onClick={handleSave}>
-            <span className="flex items-center gap-2"><Save size={16} /> Guardar</span>
+            <span className="flex items-center gap-2"><Save size={16} /> {t('admin.save')}</span>
           </Button>
         </div>
       </motion.div>

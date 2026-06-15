@@ -79,6 +79,7 @@ class PreguntaUpdate(BaseModel):
     categoria: str | None = None
     orden: int | None = None
     activa: bool | None = None
+    opciones: list[OpcionCreate] | None = None
 
 
 class PreguntaOut(PreguntaBase):

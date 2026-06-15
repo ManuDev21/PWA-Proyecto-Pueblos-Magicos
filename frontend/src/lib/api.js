@@ -33,6 +33,7 @@ export const deleteExperiencia = (id) => api.delete(`/experiencias/${id}`)
 
 export const getPreguntasAdmin = () => api.get('/preguntas-admin').then((r) => r.data)
 export const createPregunta = (data) => api.post('/preguntas', data).then((r) => r.data)
+export const updatePregunta = (id, data) => api.put(`/preguntas/${id}`, data).then((r) => r.data)
 export const deletePregunta = (id) => api.delete(`/preguntas/${id}`)
 
 // ---------- Admin / Stats ----------

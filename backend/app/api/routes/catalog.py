@@ -111,11 +111,28 @@ def crear_pregunta(payload: PreguntaCreate, db: Session = Depends(get_db)):
 
 @router.put("/preguntas/{q_id}", response_model=PreguntaOut)
 def editar_pregunta(q_id: int, payload: PreguntaUpdate, db: Session = Depends(get_db)):
-    repo = BaseRepository(Pregunta, db)
-    obj = repo.get(q_id)
+    obj = db.get(Pregunta, q_id)
     if not obj:
         raise HTTPException(404, "Pregunta no encontrada")
-    return repo.update(obj, payload.model_dump(exclude_unset=True))
+
+    data = payload.model_dump(exclude_unset=True)
+    opciones = data.pop("opciones", None)
+
+    # Actualiza los campos simples de la pregunta
+    for key, value in data.items():
+        if value is not None:
+            setattr(obj, key, value)
+
+    # Si llegan opciones, se reemplazan por completo (CRUD de opciones)
+    if opciones is not None:
+        obj.opciones.clear()
+        db.flush()
+        for op in opciones:
+            db.add(OpcionRespuesta(pregunta_id=obj.id, **op))
+
+    db.commit()
+    db.refresh(obj)
+    return obj
 
 
 @router.delete("/preguntas/{q_id}", status_code=204)

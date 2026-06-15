@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Sparkles } from 'lucide-react'
+import { MapPin, Sparkles, Play, ChevronDown } from 'lucide-react'
 import ParticlesBackground from '../../components/effects/ParticlesBackground'
 import LanguageToggle from '../../components/ui/LanguageToggle'
 import VoiceToggle from '../../components/ui/VoiceToggle'
@@ -24,7 +24,8 @@ const PYRAMID_ROWS = [
  */
 export default function SplashScreen({ onFinish }) {
   const { t, lang } = useT()
-  const [phase, setPhase] = useState('letters') // letters -> video
+  const [phase, setPhase] = useState('letters') // letters -> cta -> video
+  const [dropdownOpen, setDropdownOpen] = useState(false)
   const pyramidRef = useRef(null)
   const setPueblo = useVisitorStore((s) => s.setPueblo)
 
@@ -33,7 +34,7 @@ export default function SplashScreen({ onFinish }) {
     const ctx = gsap.context(() => {
       const chars = pyramidRef.current.querySelectorAll('.char')
       const tl = gsap.timeline({
-        onComplete: () => setPhase('video'),
+        onComplete: () => setPhase('cta'),
       })
 
       // 1) Cada letra cae desde arriba a su lugar en la pirámide (rebote)
@@ -85,6 +86,13 @@ export default function SplashScreen({ onFinish }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, lang])
 
+  // El clic en "Iniciar" es el gesto que desbloquea el audio del navegador:
+  // pasa a la fase de video y ÍXA habla automáticamente.
+  const handleStart = () => {
+    speak(t('splash.welcome'), lang)
+    setPhase('video')
+  }
+
   const selectPueblo = (pueblo) => {
     if (pueblo === 'otros') {
       showComingSoon(t('common.comingSoon'), t('common.comingSoonText'), t('common.close'))
@@ -99,12 +107,54 @@ export default function SplashScreen({ onFinish }) {
       <ParticlesBackground count={500} />
 
       {/* Toggles de idioma y voz siempre disponibles */}
-      {phase === 'video' && (
+      {phase !== 'letters' && (
         <div className="absolute right-4 top-4 z-30 flex gap-2">
           <VoiceToggle />
           <LanguageToggle />
         </div>
       )}
+
+      {/* Botón "Iniciar" con efecto tornado giratorio tras la animación de letras */}
+      <AnimatePresence>
+        {phase === 'cta' && (
+          <motion.div
+            key="cta"
+            initial={{ opacity: 0, scale: 0.4, rotate: -180 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ type: 'spring', damping: 12, stiffness: 120 }}
+            className="relative z-20 flex flex-col items-center gap-6"
+          >
+            <motion.button
+              onClick={handleStart}
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.92 }}
+              className="relative flex h-36 w-36 items-center justify-center rounded-full bg-[var(--c-secondary)] text-[var(--c-primary-deep)] shadow-sea-lg"
+            >
+              {/* Anillos giratorios estilo tornado */}
+              <motion.span
+                className="pointer-events-none absolute inset-0 rounded-full border-4 border-dashed border-[var(--c-cream)]/70"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+              />
+              <motion.span
+                className="pointer-events-none absolute -inset-3 rounded-full border-2 border-[var(--c-aqua,#2FC4B2)]/60"
+                animate={{ rotate: -360 }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+              />
+              <motion.span
+                className="pointer-events-none absolute -inset-6 rounded-full border border-[var(--c-secondary)]/40"
+                animate={{ rotate: 360, scale: [1, 1.06, 1] }}
+                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              />
+              <span className="flex flex-col items-center gap-1">
+                <Play size={30} className="fill-current" />
+                <span className="font-display text-lg font-bold">{t('splash.start')}</span>
+              </span>
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Video de ÍXA + bienvenida + selector de pueblo */}
       <AnimatePresence>
@@ -154,18 +204,42 @@ export default function SplashScreen({ onFinish }) {
               className="flex flex-col items-center gap-4"
             >
               <p className="text-sm text-[var(--c-cream)]/80">{t('splash.choose')}</p>
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <button
-                  onClick={() => selectPueblo('Isla Mujeres')}
-                  className="btn-jelly inline-flex items-center gap-2 rounded-full bg-[var(--c-secondary)] px-7 py-3 text-base font-bold text-[var(--c-primary-deep)] shadow-sea-lg"
-                >
-                  <MapPin size={20} /> {t('splash.islaMujeres')}
-                </button>
+              <div className="flex flex-row items-center gap-4">
+                <div className="relative">
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="btn-jelly inline-flex items-center gap-2 rounded-full bg-[var(--c-secondary)] px-7 py-3 text-base font-bold text-[var(--c-primary-deep)] shadow-sea-lg"
+                  >
+                    <MapPin size={20} /> {t('splash.pueblosMagicos')}
+                    <ChevronDown size={18} className={`transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  <AnimatePresence>
+                    {dropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-[var(--c-secondary)]/40 bg-[var(--c-primary-deep)] shadow-sea-lg"
+                      >
+                        <button
+                          onClick={() => selectPueblo('Isla Mujeres')}
+                          className="flex w-full items-center gap-3 px-5 py-3 text-left text-[var(--c-cream)] transition-colors hover:bg-[var(--c-secondary)]/20"
+                        >
+                          <MapPin size={18} className="text-[var(--c-secondary)]" />
+                          {t('splash.islaMujeres')}
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
                 <button
                   onClick={() => selectPueblo('otros')}
-                  className="btn-jelly inline-flex items-center gap-2 rounded-full border-2 border-[var(--c-secondary)] px-7 py-3 text-base font-bold text-[var(--c-secondary)]"
+                  className="btn-jelly inline-flex items-center gap-2 rounded-full bg-[var(--c-accent)] px-7 py-3 text-base font-bold text-[var(--c-primary-deep)] shadow-sea-lg"
                 >
-                  <Sparkles size={20} /> {t('splash.otros')}
+                  <Sparkles size={20} /> {t('splash.turismoComunitario')}
                 </button>
               </div>
             </motion.div>
