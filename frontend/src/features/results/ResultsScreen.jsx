@@ -1,16 +1,14 @@
 import { motion } from 'framer-motion'
-import { Brain, Download, RefreshCw, Sparkles } from 'lucide-react'
-import { jsPDF } from 'jspdf'
+import { Brain, MessageCircle, RefreshCw, Sparkles } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../components/layout/Header'
 import Footer from '../../components/layout/Footer'
 import Button from '../../components/ui/Button'
-import RecommendationCard from './RecommendationCard'
-import Itinerary from './Itinerary'
 import LanguageToggle from '../../components/ui/LanguageToggle'
 import VoiceToggle from '../../components/ui/VoiceToggle'
 import { useVisitorStore } from '../../store/useVisitorStore'
 import { useT } from '../../i18n/useT'
+import { showWarning } from '../../lib/alerts'
 
 export default function ResultsScreen({ result }) {
   const navigate = useNavigate()
@@ -18,45 +16,30 @@ export default function ResultsScreen({ result }) {
   const visitante = useVisitorStore((s) => s.visitante)
   const reset = useVisitorStore((s) => s.reset)
 
-  const generarFolletoPDF = () => {
-    const doc = new jsPDF()
-    doc.setFillColor(15, 61, 46)
-    doc.rect(0, 0, 210, 40, 'F')
-    doc.setTextColor(201, 162, 39)
-    doc.setFontSize(26)
-    doc.text('ÍXA · Folleto de Experiencias', 14, 25)
+  // Código de país por defecto (México). Se antepone si el número es nacional.
+  const COUNTRY_CODE = '52'
+  const normalizePhone = (raw) => {
+    let digits = (raw || '').replace(/\D/g, '')
+    if (!digits) return ''
+    if (digits.startsWith('00')) digits = digits.slice(2) // prefijo internacional 00
+    if (digits.length === 10) digits = COUNTRY_CODE + digits // número nacional MX
+    return digits
+  }
 
-    doc.setTextColor(40, 40, 40)
-    doc.setFontSize(12)
-    let y = 52
-    doc.text(`Viajero: ${visitante.nombre}`, 14, y)
-    y += 7
-    doc.text(`Perfil detectado: ${result.perfil_detectado} (${Math.round(result.confianza)}%)`, 14, y)
-    y += 7
-    const expl = doc.splitTextToSize(result.explicacion || '', 180)
-    doc.text(expl, 14, y)
-    y += expl.length * 6 + 4
-
-    doc.setFontSize(14)
-    doc.setTextColor(15, 61, 46)
-    doc.text('Experiencias recomendadas:', 14, y)
-    y += 8
-    doc.setFontSize(11)
-    doc.setTextColor(40, 40, 40)
-    result.recomendaciones.forEach((r, i) => {
-      if (y > 270) {
-        doc.addPage()
-        y = 20
-      }
-      doc.text(`${i + 1}. ${r.experiencia.nombre} — ${r.experiencia.categoria?.nombre || ''}`, 14, y)
-      y += 6
-      doc.setTextColor(120, 120, 120)
-      doc.text(`   ${r.maps_url}`, 14, y)
-      doc.setTextColor(40, 40, 40)
-      y += 8
+  const enviarWhatsApp = () => {
+    const phone = normalizePhone(visitante.telefono)
+    if (!phone) {
+      showWarning(t('res.noPhoneTitle'), t('res.noPhoneBody'), t('common.close'))
+      return
+    }
+    const link = `${window.location.origin}/recomendaciones`
+    const mensaje = t('res.waMessage', {
+      name: visitante.nombre || '',
+      perfil: result.perfil_detectado,
+      link,
     })
-
-    doc.save(`ixa-folleto-${visitante.nombre || 'viajero'}.pdf`)
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -98,11 +81,17 @@ export default function ResultsScreen({ result }) {
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <Button onClick={generarFolletoPDF}>
-              <span className="flex items-center gap-2">
-                <Download size={18} /> {t('res.downloadPdf')}
-              </span>
-            </Button>
+            <motion.button
+              onClick={enviarWhatsApp}
+              whileHover={{
+                scale: [1, 1.12, 0.95, 1.05, 0.98, 1.02, 1],
+                transition: { duration: 0.6, ease: 'easeInOut' },
+              }}
+              whileTap={{ scale: 0.94 }}
+              className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-7 py-3 font-bold text-white shadow-sea-lg"
+            >
+              <MessageCircle size={20} /> {t('res.getInfo')}
+            </motion.button>
             <Button
               variant="outline"
               onClick={() => {
@@ -116,21 +105,6 @@ export default function ResultsScreen({ result }) {
             </Button>
           </div>
         </motion.section>
-
-        {/* Recomendaciones */}
-        <section className="mt-10">
-          <h2 className="mb-5 font-display text-2xl text-gradient-gold">
-            {t('res.forYou')}
-          </h2>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {result.recomendaciones.map((item, i) => (
-              <RecommendationCard key={i} item={item} index={i} />
-            ))}
-          </div>
-        </section>
-
-        {/* Itinerario */}
-        <Itinerary visitanteId={result.visitante_id} />
       </main>
       <Footer />
     </div>

@@ -96,6 +96,19 @@ export const translations = {
     'res.it.finde': 'Fin de semana',
     'res.generating': 'Generando itinerario...',
     'res.location': 'Ubicación',
+    'res.it.downloadPdf': 'Descargar itinerario (PDF)',
+    'res.it.title': 'Itinerario',
+    'res.it.for': 'Itinerario para',
+    'res.getInfo': 'Obtener información',
+    'res.waMessage': '¡Hola {name}! Mira tu información recomendada para tu perfil «{perfil}»: {link}',
+    'res.noPhoneTitle': 'Número requerido',
+    'res.noPhoneBody': 'No registramos un número de celular. Reinicia y agrega tu teléfono para recibir tu información por WhatsApp.',
+
+    // Recomendaciones (vista dedicada)
+    'recs.title': 'Información recomendada para tu perfil',
+    'recs.subtitle': 'Experiencias e itinerario seleccionados según tu perfil {perfil}.',
+    'recs.back': 'Volver',
+    'recs.byCategory': 'Por categorías',
 
     // Common
     'common.close': 'Cerrar',
@@ -219,10 +232,10 @@ export const translations = {
     'contact.send': 'Send message',
     'contact.sent': 'Message sent! Thanks for reaching out.',
 
-    'chat.q.nombre': 'Hi! I am ÍXA, your Magical Towns guide. What is your name?',
+    'chat.q.nombre': 'Hi! I am Íxa, your Magical Towns guide. What is your name?',
     'chat.q.edad': 'Nice to meet you, {name}! How old are you?',
     'chat.q.correo': 'Perfect. Could you share your email?',
-    'chat.q.telefono': 'Lastly, your mobile number (so we can later send you a PDF with itinerary recommendations).',
+    'chat.q.telefono': 'Lastly, your mobile number',
     'chat.ph.nombre': 'Type your name...',
     'chat.ph.edad': 'Your age...',
     'chat.ph.correo': 'youremail@example.com',
@@ -256,6 +269,19 @@ export const translations = {
     'res.it.finde': 'Weekend',
     'res.generating': 'Generating itinerary...',
     'res.location': 'Location',
+    'res.it.downloadPdf': 'Download itinerary (PDF)',
+    'res.it.title': 'Itinerary',
+    'res.it.for': 'Itinerary for',
+    'res.getInfo': 'Get information',
+    'res.waMessage': 'Hi {name}! Check the recommended information for your «{perfil}» profile: {link}',
+    'res.noPhoneTitle': 'Phone required',
+    'res.noPhoneBody': 'We did not record a phone number. Restart and add your phone to receive your information via WhatsApp.',
+
+    // Recommendations (dedicated view)
+    'recs.title': 'Recommended information for your profile',
+    'recs.subtitle': 'Experiences and itinerary selected for your {perfil} profile.',
+    'recs.back': 'Back',
+    'recs.byCategory': 'By categories',
 
     'common.close': 'Close',
     'common.send': 'Send',
@@ -416,6 +442,19 @@ export const translations = {
     'res.it.finde': 'Week-end',
     'res.generating': 'Génération de l’itinéraire...',
     'res.location': 'Emplacement',
+    'res.it.downloadPdf': 'Télécharger l’itinéraire (PDF)',
+    'res.it.title': 'Itinéraire',
+    'res.it.for': 'Itinéraire pour',
+    'res.getInfo': 'Obtenir des informations',
+    'res.waMessage': 'Bonjour {name} ! Découvrez les informations recommandées pour votre profil «{perfil}» : {link}',
+    'res.noPhoneTitle': 'Numéro requis',
+    'res.noPhoneBody': 'Aucun numéro de téléphone enregistré. Recommencez et ajoutez votre téléphone pour recevoir vos informations via WhatsApp.',
+
+    // Recommandations (vue dédiée)
+    'recs.title': 'Informations recommandées pour votre profil',
+    'recs.subtitle': 'Expériences et itinéraire sélectionnés pour votre profil {perfil}.',
+    'recs.back': 'Retour',
+    'recs.byCategory': 'Par catégories',
 
     'common.close': 'Fermer',
     'common.send': 'Envoyer',

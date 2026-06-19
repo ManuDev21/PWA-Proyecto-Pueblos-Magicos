@@ -11,6 +11,7 @@ class AnalisisOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     visitante_id: int
+    visitante_nombre: str | None = None
     perfil_detectado: str
     confianza: Decimal
     modelo_usado: str

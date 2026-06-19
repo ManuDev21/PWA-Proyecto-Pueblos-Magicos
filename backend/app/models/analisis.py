@@ -21,3 +21,7 @@ class AnalisisIA(Base):
     fecha_analisis: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     visitante: Mapped["Visitante"] = relationship(back_populates="analisis")  # noqa: F821
+
+    @property
+    def visitante_nombre(self) -> str | None:
+        return self.visitante.nombre if self.visitante else None

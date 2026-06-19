@@ -193,6 +193,48 @@ body {
   50% { box-shadow: 0 0 26px rgba(244, 183, 64, 0.75), 0 0 52px rgba(47, 196, 178, 0.6); }
 }
 
+/* Botón con borde de agua: forma orgánica tipo heptágono que se mueve siempre */
+.water-btn {
+  position: relative;
+  z-index: 0;
+}
+.water-btn::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  z-index: -1;
+  background: linear-gradient(
+    120deg,
+    var(--c-sage),
+    var(--c-primary-light),
+    var(--c-secondary-light),
+    var(--c-sage)
+  );
+  background-size: 250% 250%;
+  border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+  filter: blur(1px);
+  animation: water-morph 7s ease-in-out infinite, water-flow 5s linear infinite;
+}
+/* Morfología orgánica del borde (heptágono ondulante de agua) */
+@keyframes water-morph {
+  0%, 100% {
+    border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+    transform: rotate(0deg);
+  }
+  33% {
+    border-radius: 67% 33% 42% 58% / 63% 51% 49% 37%;
+    transform: rotate(5deg);
+  }
+  66% {
+    border-radius: 38% 62% 55% 45% / 49% 61% 39% 51%;
+    transform: rotate(-5deg);
+  }
+}
+@keyframes water-flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 250% 50%; }
+}
+
 /* Los alerts siempre por encima de cualquier capa (partículas, navbar, video) */
 .swal2-container {
   z-index: 100000 !important;

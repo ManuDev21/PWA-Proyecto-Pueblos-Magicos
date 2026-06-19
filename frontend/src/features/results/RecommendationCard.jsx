@@ -2,9 +2,10 @@ import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin, Clock, Star } from 'lucide-react'
 import { useT } from '../../i18n/useT'
+import { tc } from '../../i18n/contentTranslations'
 
 export default function RecommendationCard({ item, index }) {
-  const { t } = useT()
+  const { t, lang } = useT()
   const exp = item.experiencia
   const ref = useRef(null)
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 })
@@ -31,7 +32,7 @@ export default function RecommendationCard({ item, index }) {
       {/* Imagen (se desvanece al hover) */}
       <img
         src={exp.imagen_url}
-        alt={exp.nombre}
+        alt={tc(exp.nombre, lang)}
         onError={(e) => {
           e.currentTarget.src = '/assets/logo.jpeg'
         }}
@@ -40,12 +41,12 @@ export default function RecommendationCard({ item, index }) {
       <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-primary-deep)] via-[var(--c-primary-deep)]/30 to-transparent" />
 
       <span className="reveal-base absolute left-3 top-3 z-10 rounded-full bg-[var(--c-secondary)] px-3 py-1 text-xs font-semibold text-[var(--c-primary-deep)]">
-        {exp.categoria?.nombre || 'Experiencia'}
+        {exp.categoria?.nombre ? tc(exp.categoria.nombre, lang) : 'Experiencia'}
       </span>
 
       {/* Título visible (se desvanece al hover) */}
       <div className="reveal-base absolute bottom-0 left-0 z-10 p-5">
-        <h3 className="font-display text-xl text-white drop-shadow">{exp.nombre}</h3>
+        <h3 className="font-display text-xl text-white drop-shadow">{tc(exp.nombre, lang)}</h3>
         <div className="mt-1 flex gap-3 text-xs text-[var(--c-cream)]/90">
           <span className="flex items-center gap-1">
             <Star size={13} className="text-[var(--c-secondary)]" />
@@ -60,8 +61,8 @@ export default function RecommendationCard({ item, index }) {
 
       {/* Info revelada al hover */}
       <div className="reveal-info absolute inset-0 z-20 flex flex-col justify-center bg-[var(--c-primary-deep)]/95 p-6 text-center">
-        <h3 className="font-display text-xl text-[var(--c-secondary)]">{exp.nombre}</h3>
-        <p className="mt-2 text-sm text-[var(--c-cream)]/90">{exp.descripcion}</p>
+        <h3 className="font-display text-xl text-[var(--c-secondary)]">{tc(exp.nombre, lang)}</h3>
+        <p className="mt-2 text-sm text-[var(--c-cream)]/90">{tc(exp.descripcion, lang)}</p>
         <span className="mx-auto mt-3 rounded-full bg-[var(--c-secondary)]/20 px-3 py-1 text-xs font-semibold text-[var(--c-secondary)]">
           {t('res.affinity')} {Math.round(item.score)}
         </span>

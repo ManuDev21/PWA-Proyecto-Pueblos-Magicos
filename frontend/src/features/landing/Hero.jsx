@@ -77,10 +77,13 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1, type: 'spring', stiffness: 140 }}
-          whileHover={{ scale: 1.06, y: -3 }}
-          whileTap={{ scale: 0.94 }}
+          whileHover={{
+            scale: [1, 1.18, 0.9, 1.1, 0.97, 1.04, 1],
+            transition: { duration: 0.7, ease: 'easeInOut' },
+          }}
+          whileTap={{ scale: 0.92 }}
           onClick={() => navigate('/experiencia')}
-          className="btn-jelly mt-10 inline-flex items-center gap-3 rounded-full bg-[var(--c-secondary)] px-9 py-4 text-lg font-bold text-[var(--c-primary-deep)] shadow-sea-lg"
+          className="water-btn mt-10 inline-flex items-center gap-3 rounded-full bg-[var(--c-secondary)] px-9 py-4 text-lg font-bold text-[var(--c-primary-deep)] shadow-sea-lg"
         >
           <MapPin size={22} />
           {t('hero.cta')}

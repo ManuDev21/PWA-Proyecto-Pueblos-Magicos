@@ -9,6 +9,7 @@ import IxaAvatar from '../../components/ui/IxaAvatar'
 import LanguageToggle from '../../components/ui/LanguageToggle'
 import VoiceToggle from '../../components/ui/VoiceToggle'
 import { useT } from '../../i18n/useT'
+import { tc } from '../../i18n/contentTranslations'
 import { speak } from '../../lib/speech'
 import { showError } from '../../lib/alerts'
 
@@ -53,9 +54,9 @@ export default function QuizScreen() {
 
   const pregunta = preguntas[idx]
 
-  // ÍXA lee la pregunta en voz alta al cambiar
+  // ÍXA lee la pregunta en voz alta al cambiar (en el idioma seleccionado)
   useEffect(() => {
-    if (pregunta && !mutation.isPending) speak(pregunta.pregunta, lang)
+    if (pregunta && !mutation.isPending) speak(tc(pregunta.pregunta, lang), lang)
   }, [pregunta?.id, lang, mutation.isPending]) // eslint-disable-line
 
   if (isLoading)
@@ -151,31 +152,47 @@ export default function QuizScreen() {
               transition={{ duration: 0.3 }}
               style={{ perspective: 1000 }}
             >
-              <h2 className="mb-8 text-center font-display text-2xl text-[var(--c-cream)] md:text-3xl">
-                {pregunta.pregunta}
-              </h2>
+              <motion.h2
+                initial={{ opacity: 0, y: -20, filter: 'blur(6px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                transition={{ duration: 0.45, ease: [0.34, 1.56, 0.64, 1] }}
+                className="mb-8 text-center font-display text-2xl text-[var(--c-cream)] md:text-3xl"
+              >
+                {tc(pregunta.pregunta, lang)}
+              </motion.h2>
               <div className="grid gap-4 md:grid-cols-2">
                 {pregunta.opciones.map((op, i) => (
                   <motion.button
                     key={`${pregunta.id}-${op.id}`}
-                    whileHover={{ scale: 1.05, rotateX: 6, rotateY: i % 2 ? -6 : 6, y: -4 }}
-                    whileTap={{ scale: 0.92 }}
+                    initial={{ opacity: 0, y: 40, scale: 0.8, rotate: i % 2 ? 4 : -4 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+                    transition={{
+                      delay: 0.15 + i * 0.09,
+                      type: 'spring',
+                      stiffness: 320,
+                      damping: 14,
+                    }}
+                    whileHover={{
+                      scale: [1, 1.12, 0.96, 1.06, 1],
+                      rotate: [0, i % 2 ? -2 : 2, 0],
+                      transition: { duration: 0.55, ease: 'easeInOut' },
+                    }}
+                    whileTap={{ scale: 0.88, rotate: 0 }}
                     onClick={() => handleSelect(op.inciso)}
                     style={{
                       transformStyle: 'preserve-3d',
-                      animationDelay: `${i * 0.09}s`,
                       boxShadow: '0 10px 0 rgba(0,0,0,0.18), 0 18px 35px rgba(5,60,76,0.45)',
                     }}
-                    className={`btn-jelly flex items-center gap-3 rounded-3xl px-5 py-5 text-left text-white transition-all ${
+                    className={`group relative flex items-center gap-3 overflow-hidden rounded-3xl px-5 py-5 text-left text-white ${
                       OPTION_COLORS[i % OPTION_COLORS.length]
-                    } ${i % 2 === 0 ? 'animate-slide-in-left' : 'animate-slide-in-right'} ${
-                      selected === op.inciso ? 'ring-4 ring-white' : ''
-                    }`}
+                    } ${selected === op.inciso ? 'ring-4 ring-white' : ''}`}
                   >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/30 font-bold">
+                    {/* Splash al hover */}
+                    <span className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 scale-0 rounded-full bg-white/20 transition-transform duration-500 ease-out group-hover:scale-150" />
+                    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/30 font-bold transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
                       {op.inciso}
                     </span>
-                    <span className="font-semibold">{op.texto}</span>
+                    <span className="relative font-semibold">{tc(op.texto, lang)}</span>
                   </motion.button>
                 ))}
               </div>

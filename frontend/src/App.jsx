@@ -7,6 +7,7 @@ import LandingPage from './pages/LandingPage'
 import ExperiencePage from './pages/ExperiencePage'
 import QuizPage from './pages/QuizPage'
 import ResultsPage from './pages/ResultsPage'
+import RecommendationsPage from './pages/RecommendationsPage'
 import AdminPage from './pages/AdminPage'
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/experiencia" element={<ExperiencePage />} />
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/resultados" element={<ResultsPage />} />
+        <Route path="/recomendaciones" element={<RecommendationsPage />} />
         <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </AnimatePresence>

@@ -19,6 +19,7 @@ class VisitanteOut(VisitanteBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
     perfil_id: int | None = None
+    perfil_nombre: str | None = None
     fecha_registro: datetime
 
 
