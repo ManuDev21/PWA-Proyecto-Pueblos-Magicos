@@ -1,12 +1,13 @@
-"""Rutas del panel administrativo: estadísticas, gráficas, tema e IA."""
+"""Rutas del panel administrativo: estadísticas, gráficas, tema, IA y visitantes."""
 from fastapi import APIRouter, Depends
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
-from app.models import AnalisisIA
+from app.models import AnalisisIA, Visitante
 from app.schemas.admin import DashboardStats, DashboardCharts, ThemeUpdate
 from app.schemas.ai import AnalisisOut
+from app.schemas.visitor import VisitanteOut
 from app.services.admin_service import AdminService
 
 router = APIRouter(prefix="/admin", tags=["admin"])
@@ -25,7 +26,18 @@ def graficas(db: Session = Depends(get_db)):
 @router.get("/analisis", response_model=list[AnalisisOut])
 def historial_analisis(db: Session = Depends(get_db)):
     return db.scalars(
-        select(AnalisisIA).order_by(AnalisisIA.fecha_analisis.desc())
+        select(AnalisisIA)
+        .options(selectinload(AnalisisIA.visitante))
+        .order_by(AnalisisIA.fecha_analisis.desc())
+    ).all()
+
+
+@router.get("/visitantes", response_model=list[VisitanteOut])
+def listar_visitantes(db: Session = Depends(get_db)):
+    return db.scalars(
+        select(Visitante)
+        .options(selectinload(Visitante.perfil))
+        .order_by(Visitante.fecha_registro.desc())
     ).all()
 
 

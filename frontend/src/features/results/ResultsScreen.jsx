@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Brain, MessageCircle, RefreshCw, Sparkles } from 'lucide-react'
+import { Brain, MessageCircle, RefreshCw, Sparkles, ArrowRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../../components/layout/Header'
 import Footer from '../../components/layout/Footer'
@@ -81,6 +81,17 @@ export default function ResultsScreen({ result }) {
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
+            <motion.button
+              onClick={() => navigate('/recomendaciones')}
+              whileHover={{
+                scale: [1, 1.12, 0.95, 1.05, 0.98, 1.02, 1],
+                transition: { duration: 0.6, ease: 'easeInOut' },
+              }}
+              whileTap={{ scale: 0.94 }}
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--c-secondary)] px-7 py-3 font-bold text-[var(--c-primary-deep)] shadow-sea-lg"
+            >
+              <Sparkles size={20} /> {t('res.seeRecs')} <ArrowRight size={18} />
+            </motion.button>
             <motion.button
               onClick={enviarWhatsApp}
               whileHover={{

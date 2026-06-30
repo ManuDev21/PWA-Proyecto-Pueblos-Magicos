@@ -41,6 +41,7 @@ export default function ExperienceFormModal({ exp = {}, categorias = [], onSave,
     duracion_horas: exp.duracion_horas ?? 2,
     precio_aprox: exp.precio_aprox ?? 0,
     imagen_url: exp.imagen_url || '',
+    historia: exp.historia || '',
   })
   const mapRef = useRef(null)
   const mapInstance = useRef(null)
@@ -95,6 +96,7 @@ export default function ExperienceFormModal({ exp = {}, categorias = [], onSave,
     onSave({
       ...form,
       categoria_id: Number(form.categoria_id),
+      historia: form.historia || null,
       latitud: form.latitud === '' ? null : String(form.latitud),
       longitud: form.longitud === '' ? null : String(form.longitud),
       duracion_horas: Number(form.duracion_horas) || 2,
@@ -126,6 +128,7 @@ export default function ExperienceFormModal({ exp = {}, categorias = [], onSave,
           <div className="flex flex-col gap-3">
             <input className={inputCls} placeholder={t('admin.exp.nombre')} value={form.nombre} onChange={(e) => set('nombre', e.target.value)} />
             <textarea className={`${inputCls} min-h-[90px]`} placeholder={t('admin.exp.descripcion')} value={form.descripcion} onChange={(e) => set('descripcion', e.target.value)} />
+            <textarea className={`${inputCls} min-h-[110px]`} placeholder={t('admin.exp.historia')} value={form.historia} onChange={(e) => set('historia', e.target.value)} />
             <select className={inputCls} value={form.categoria_id} onChange={(e) => set('categoria_id', e.target.value)}>
               {categorias.map((c) => (
                 <option key={c.id} value={c.id}>{c.nombre}</option>

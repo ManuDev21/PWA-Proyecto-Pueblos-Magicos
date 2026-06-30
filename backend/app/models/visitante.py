@@ -29,3 +29,7 @@ class Visitante(Base):
     analisis: Mapped[list["AnalisisIA"]] = relationship(  # noqa: F821
         back_populates="visitante", cascade="all, delete-orphan"
     )
+
+    @property
+    def perfil_nombre(self) -> str | None:
+        return self.perfil.nombre_perfil if self.perfil else None

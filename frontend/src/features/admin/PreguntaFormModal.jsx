@@ -4,8 +4,8 @@ import { motion } from 'framer-motion'
 import { X, Save } from 'lucide-react'
 import Button from '../../components/ui/Button'
 
-const CATS = ['Cultural', 'Gastronómico', 'Ecológico', 'Comunitario', 'Bienestar']
-const INCISOS = ['A', 'B', 'C', 'D', 'E']
+const CATS = ['Histórico-Cultural', 'Naturaleza y Mar', 'Miradores y Fotografía', 'Comunidad e Inclusión']
+const INCISOS = ['A', 'B', 'C', 'D']
 
 const buildInitialOpciones = (opciones = []) =>
   INCISOS.map((inc, i) => {

@@ -93,6 +93,7 @@ class ExperienciaBase(BaseModel):
     categoria_id: int
     nombre: str = Field(..., max_length=180)
     descripcion: str
+    historia: str | None = None
     latitud: Decimal | None = None
     longitud: Decimal | None = None
     imagen_url: str | None = None
@@ -111,6 +112,7 @@ class ExperienciaUpdate(BaseModel):
     categoria_id: int | None = None
     nombre: str | None = None
     descripcion: str | None = None
+    historia: str | None = None
     latitud: Decimal | None = None
     longitud: Decimal | None = None
     imagen_url: str | None = None

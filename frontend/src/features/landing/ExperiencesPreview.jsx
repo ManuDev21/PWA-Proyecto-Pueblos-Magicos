@@ -1,15 +1,40 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
-import { MapPin, Star } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { MapPin, Star, BookOpen, ArrowLeft, Volume2, Square } from 'lucide-react'
 import { getExperiencias } from '../../lib/api'
 import { useT } from '../../i18n/useT'
+import { tc } from '../../i18n/contentTranslations'
+import { speak, stopSpeaking } from '../../lib/speech'
 
 export default function ExperiencesPreview() {
-  const { t } = useT()
+  const { t, lang } = useT()
   const { data: experiencias = [] } = useQuery({
     queryKey: ['experiencias'],
     queryFn: getExperiencias,
   })
+  const [flippedId, setFlippedId] = useState(null)
+  const [audioId, setAudioId] = useState(null)
+
+  const toggleAudio = (e, experiencia) => {
+    e.stopPropagation()
+    if (audioId === experiencia.id) {
+      stopSpeaking()
+      setAudioId(null)
+    } else {
+      stopSpeaking()
+      setAudioId(experiencia.id)
+      speak(tc(experiencia.historia, lang), lang)
+    }
+  }
+
+  const handleFlipBack = (id) => {
+    if (audioId === id) {
+      stopSpeaking()
+      setAudioId(null)
+    }
+    setFlippedId(null)
+  }
 
   const top = experiencias.slice(0, 6)
 
@@ -26,49 +51,108 @@ export default function ExperiencesPreview() {
         </motion.h2>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {top.map((e, i) => (
-            <motion.div
-              key={e.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="hover-reveal relative h-72 overflow-hidden rounded-3xl shadow-sea"
-            >
-              <img
-                src={e.imagen_url}
-                alt={e.nombre}
-                onError={(ev) => {
-                  ev.currentTarget.src = '/assets/logo.jpeg'
-                }}
-                className="reveal-img absolute inset-0 h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-primary-deep)] via-transparent to-transparent" />
+          {top.map((e, i) => {
+            const isFlipped = flippedId === e.id
+            return (
+              <motion.div
+                key={e.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="relative h-80 [perspective:1200px]"
+              >
+                <div
+                  className="relative h-full w-full transition-transform duration-700 [transform-style:preserve-3d]"
+                  style={{ transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+                >
+                  {/* Cara frontal */}
+                  <div className="hover-reveal absolute inset-0 overflow-hidden rounded-3xl shadow-sea [backface-visibility:hidden]">
+                    <img
+                      src={e.imagen_url}
+                      alt={tc(e.nombre, lang)}
+                      onError={(ev) => {
+                        ev.currentTarget.src = '/assets/logo.jpeg'
+                      }}
+                      className="reveal-img absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-primary-deep)] via-transparent to-transparent" />
 
-              {/* Título visible siempre (se desvanece al hover) */}
-              <div className="reveal-base absolute bottom-0 left-0 p-5">
-                <span className="rounded-full bg-[var(--c-secondary)] px-3 py-1 text-xs font-semibold text-[var(--c-primary-deep)]">
-                  {e.categoria?.nombre}
-                </span>
-                <h3 className="mt-2 font-display text-xl text-white drop-shadow">{e.nombre}</h3>
-              </div>
+                    <div className="reveal-base absolute bottom-0 left-0 p-5">
+                      <span className="rounded-full bg-[var(--c-secondary)] px-3 py-1 text-xs font-semibold text-[var(--c-primary-deep)]">
+                        {e.categoria?.nombre ? tc(e.categoria.nombre, lang) : ''}
+                      </span>
+                      <h3 className="mt-2 font-display text-xl text-white drop-shadow">{tc(e.nombre, lang)}</h3>
+                    </div>
 
-              {/* Info revelada al hover */}
-              <div className="reveal-info absolute inset-0 flex flex-col justify-center bg-[var(--c-primary-deep)]/95 p-6 text-center">
-                <h3 className="font-display text-xl text-[var(--c-secondary)]">{e.nombre}</h3>
-                <p className="mt-2 text-sm text-[var(--c-cream)]/90">{e.descripcion}</p>
-                <div className="mt-3 flex items-center justify-center gap-3 text-xs text-[var(--c-cream)]/80">
-                  <span className="flex items-center gap-1">
-                    <Star size={13} className="text-[var(--c-secondary)]" />
-                    {Number(e.puntuacion_promedio).toFixed(1)}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MapPin size={13} className="text-[var(--c-secondary)]" /> Isla Mujeres
-                  </span>
+                    <div className="reveal-info absolute inset-0 flex flex-col justify-center bg-[var(--c-primary-deep)]/95 p-6 text-center">
+                      <h3 className="font-display text-xl text-[var(--c-secondary)]">{tc(e.nombre, lang)}</h3>
+                      <p className="mt-2 text-sm text-[var(--c-cream)]/90">{tc(e.descripcion, lang)}</p>
+                      <div className="mt-3 flex items-center justify-center gap-3 text-xs text-[var(--c-cream)]/80">
+                        <span className="flex items-center gap-1">
+                          <Star size={13} className="text-[var(--c-secondary)]" />
+                          {Number(e.puntuacion_promedio).toFixed(1)}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin size={13} className="text-[var(--c-secondary)]" /> Isla Mujeres
+                        </span>
+                      </div>
+                      {e.historia && (
+                        <button
+                          onClick={() => setFlippedId(e.id)}
+                          className="btn-jelly mx-auto mt-4 flex w-max items-center gap-2 rounded-2xl bg-[var(--c-secondary)] px-5 py-2 text-sm font-semibold text-[var(--c-primary-deep)]"
+                        >
+                          <BookOpen size={16} /> {t('exp.miHistoria')}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Cara trasera — historia */}
+                  {e.historia && (
+                    <div className="absolute inset-0 overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--c-primary-deep)] to-[#061814] p-6 shadow-sea [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                      <div className="pointer-events-none absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[var(--c-secondary)]/20 blur-3xl" />
+                      <div className="pointer-events-none absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-[var(--c-accent)]/15 blur-2xl" />
+
+                      <div className="relative flex h-full flex-col">
+                        <span className="mb-3 flex w-max items-center gap-2 rounded-full bg-[var(--c-secondary)]/20 px-3 py-1 text-xs font-semibold text-[var(--c-secondary)]">
+                          <BookOpen size={14} /> {t('exp.miHistoria')}
+                        </span>
+                        <h3 className="mb-3 font-display text-lg text-[var(--c-secondary)]">{tc(e.nombre, lang)}</h3>
+                        <AnimatePresence>
+                          {isFlipped && (
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.4, duration: 0.6 }}
+                              className="flex-1 overflow-y-auto text-sm leading-relaxed text-[var(--c-cream)]/90"
+                            >
+                              {tc(e.historia, lang)}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                        <div className="mt-4 flex items-center gap-2">
+                          <button
+                            onClick={() => handleFlipBack(e.id)}
+                            className="btn-jelly flex w-max items-center gap-2 rounded-2xl border border-[var(--c-secondary)]/40 px-4 py-2 text-xs font-semibold text-[var(--c-cream)] hover:bg-white/5"
+                          >
+                            <ArrowLeft size={14} /> {t('exp.cerrarHistoria')}
+                          </button>
+                          <button
+                            onClick={(ev) => toggleAudio(ev, e)}
+                            className="btn-jelly flex w-max items-center gap-2 rounded-2xl border border-[var(--c-secondary)]/40 px-4 py-2 text-xs font-semibold text-[var(--c-secondary)] hover:bg-[var(--c-secondary)]/10"
+                          >
+                            {audioId === e.id ? <Square size={14} /> : <Volume2 size={14} />}
+                            {audioId === e.id ? t('exp.detener') : t('exp.escuchar')}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>

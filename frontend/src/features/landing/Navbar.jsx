@@ -46,6 +46,12 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4">
         <button onClick={() => scrollTo('inicio')} className="flex items-center gap-2 sm:gap-3">
           <img
+            src="/assets/pueblosMagicos.jpg"
+            alt="Pueblos Mágicos de México"
+            className="h-9 w-auto rounded-lg bg-white/90 object-contain p-0.5 shadow-sea sm:h-12 md:h-14"
+          />
+          <span className="hidden h-10 w-px bg-[var(--c-secondary)]/60 sm:block" />
+          <img
             src="/assets/logo.jpeg"
             alt="ÍXA · Experta en Pueblos Mágicos"
             className="h-11 w-auto rounded-xl object-contain shadow-sea sm:h-14 md:h-16"

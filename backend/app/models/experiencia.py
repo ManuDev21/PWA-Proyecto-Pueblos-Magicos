@@ -16,6 +16,7 @@ class Experiencia(Base):
     )
     nombre: Mapped[str] = mapped_column(String(180), nullable=False)
     descripcion: Mapped[str] = mapped_column(Text, nullable=False)
+    historia: Mapped[str | None] = mapped_column(Text, nullable=True)
     latitud: Mapped[Decimal | None] = mapped_column(Numeric(10, 7), nullable=True)
     longitud: Mapped[Decimal | None] = mapped_column(Numeric(10, 7), nullable=True)
     imagen_url: Mapped[str | None] = mapped_column(String(500), nullable=True)

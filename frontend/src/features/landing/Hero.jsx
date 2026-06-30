@@ -50,7 +50,7 @@ export default function Hero() {
           {t('hero.badge')}
         </motion.span>
 
-        <h1 className="font-display text-4xl font-black leading-tight text-white drop-shadow-[0_4px_25px_rgba(0,0,0,0.5)] sm:text-6xl md:text-7xl">
+        <h1 className="font-display text-3xl font-black leading-tight text-white drop-shadow-[0_4px_25px_rgba(0,0,0,0.5)] md:text-5xl">
           {words.map((w, i) => (
             <motion.span
               key={i}
@@ -68,7 +68,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="mx-auto mt-6 max-w-2xl text-lg text-[var(--c-cream)]/90"
+          className="mx-auto mt-6 max-w-2xl text-center text-lg text-[var(--c-cream)]/90"
         >
           {t('hero.subtitle')}
         </motion.p>

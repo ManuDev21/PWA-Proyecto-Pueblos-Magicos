@@ -11,13 +11,35 @@ import { useVisitorStore } from '../../store/useVisitorStore'
 import { useT } from '../../i18n/useT'
 import { tc } from '../../i18n/contentTranslations'
 
+const PROFILE_TO_CATEGORY = {
+  'Explorador Cultural': 'Histórico-Cultural',
+  'Amante de la Naturaleza': 'Naturaleza y Mar',
+  'Cazador de Paisajes': 'Miradores y Fotografía',
+  'Espíritu Comunitario': 'Comunidad e Inclusión',
+}
+
 export default function RecommendationsScreen({ result }) {
   const navigate = useNavigate()
   const { t, lang } = useT()
   const visitante = useVisitorStore((s) => s.visitante)
 
-  // Agrupar recomendaciones por categoría
-  const grupos = result.recomendaciones.reduce((acc, item, i) => {
+  // Determinar la categoría dominante a partir de puntuaciones o perfil
+  const dominantCategory =
+    (result.puntuaciones?.length > 0
+      ? [...result.puntuaciones].sort((a, b) => b.puntos - a.puntos)[0]?.categoria
+      : null) ||
+    PROFILE_TO_CATEGORY[result.perfil_detectado] ||
+    null
+
+  // Filtrar solo las recomendaciones de la categoría dominante ("para ti")
+  const filtered = dominantCategory
+    ? result.recomendaciones.filter(
+        (item) => item.experiencia.categoria?.nombre === dominantCategory
+      )
+    : result.recomendaciones
+
+  // Agrupar las filtradas por categoría (normalmente un solo grupo)
+  const grupos = filtered.reduce((acc, item, i) => {
     const cat = item.experiencia.categoria?.nombre || 'Otras'
     if (!acc[cat]) acc[cat] = []
     acc[cat].push({ item, index: i })
@@ -57,7 +79,7 @@ export default function RecommendationsScreen({ result }) {
         {/* Experiencias agrupadas por categoría */}
         <section className="mt-10">
           <h2 className="mb-5 font-display text-2xl text-gradient-gold">
-            {t('recs.byCategory')}
+            {t('recs.yourMatch')}
           </h2>
           <div className="space-y-10">
             {Object.entries(grupos).map(([categoria, items]) => (

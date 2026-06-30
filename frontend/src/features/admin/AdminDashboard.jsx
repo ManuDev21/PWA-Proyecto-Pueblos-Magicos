@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
-  LayoutDashboard, Layers, MapPinned, HelpCircle, Brain, Palette, LogOut, Home,
+  LayoutDashboard, Layers, MapPinned, HelpCircle, Brain, Palette, LogOut, Home, Users,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
@@ -11,6 +11,7 @@ import CrudCategorias from './CrudCategorias'
 import CrudExperiencias from './CrudExperiencias'
 import CrudPreguntas from './CrudPreguntas'
 import AnalisisPanel from './AnalisisPanel'
+import CrudVisitantes from './CrudVisitantes'
 import { useThemeStore } from '../../store/useThemeStore'
 import LanguageToggle from '../../components/ui/LanguageToggle'
 import VoiceToggle from '../../components/ui/VoiceToggle'
@@ -22,6 +23,7 @@ const TABS = [
   { id: 'experiencias', labelKey: 'admin.tab.experiencias', icon: MapPinned },
   { id: 'preguntas', labelKey: 'admin.tab.preguntas', icon: HelpCircle },
   { id: 'ia', labelKey: 'admin.tab.ia', icon: Brain },
+  { id: 'visitantes', labelKey: 'admin.tab.visitantes', icon: Users },
 ]
 
 export default function AdminDashboard() {
@@ -124,6 +126,7 @@ export default function AdminDashboard() {
           {tab === 'experiencias' && <CrudExperiencias />}
           {tab === 'preguntas' && <CrudPreguntas />}
           {tab === 'ia' && <AnalisisPanel />}
+          {tab === 'visitantes' && <CrudVisitantes />}
         </motion.main>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Sparkles, Play, ChevronDown } from 'lucide-react'
+import { MapPin, Play, ChevronDown } from 'lucide-react'
 import ParticlesBackground from '../../components/effects/ParticlesBackground'
 import LanguageToggle from '../../components/ui/LanguageToggle'
 import VoiceToggle from '../../components/ui/VoiceToggle'
@@ -171,7 +171,7 @@ export default function SplashScreen({ onFinish }) {
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               className="logo-ring"
             >
-              <div className="overflow-hidden rounded-full" style={{ width: 'min(60vw, 300px)', height: 'min(60vw, 300px)' }}>
+              <div className="overflow-hidden rounded-full" style={{ width: 'min(60vw, 250px)', height: 'min(60vw, 250px)' }}>
                 <video
                   src="/assets/chatbot.mp4"
                   autoPlay
@@ -191,7 +191,7 @@ export default function SplashScreen({ onFinish }) {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.7 }}
-              className="max-w-xl text-center font-display text-2xl text-gradient-gold sm:text-3xl md:text-4xl"
+              className="max-w-xl text-justify font-display text-2xl text-gradient-gold"
             >
               {t('splash.welcome')}
             </motion.p>
@@ -208,9 +208,14 @@ export default function SplashScreen({ onFinish }) {
                 <div className="relative">
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="btn-jelly inline-flex items-center gap-2 rounded-full bg-[var(--c-secondary)] px-7 py-3 text-base font-bold text-[var(--c-primary-deep)] shadow-sea-lg"
+                    className="btn-jelly inline-flex items-center gap-2 rounded-full bg-[var(--c-secondary)] py-2 pl-2 pr-5 text-base font-bold text-[var(--c-primary-deep)] shadow-sea-lg"
                   >
-                    <MapPin size={20} /> {t('splash.pueblosMagicos')}
+                    <img
+                      src="/assets/pueblosMagicos.jpg"
+                      alt=""
+                      className="h-9 w-9 rounded-full bg-white object-contain p-0.5"
+                    />
+                    {t('splash.pueblosMagicos')}
                     <ChevronDown size={18} className={`transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
 
@@ -237,9 +242,14 @@ export default function SplashScreen({ onFinish }) {
 
                 <button
                   onClick={() => selectPueblo('otros')}
-                  className="btn-jelly inline-flex items-center gap-2 rounded-full bg-[var(--c-accent)] px-7 py-3 text-base font-bold text-[var(--c-primary-deep)] shadow-sea-lg"
+                  className="btn-jelly inline-flex items-center gap-2 rounded-full bg-[var(--c-accent)] py-2 pl-2 pr-5 text-base font-bold text-[var(--c-primary-deep)] shadow-sea-lg"
                 >
-                  <Sparkles size={20} /> {t('splash.turismoComunitario')}
+                  <img
+                    src="/assets/turismoComuunitario.png"
+                    alt=""
+                    className="h-9 w-9 rounded-full bg-white object-contain p-0.5"
+                  />
+                  {t('splash.turismoComunitario')}
                 </button>
               </div>
             </motion.div>

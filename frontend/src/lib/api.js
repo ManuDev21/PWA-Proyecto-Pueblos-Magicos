@@ -40,6 +40,7 @@ export const deletePregunta = (id) => api.delete(`/preguntas/${id}`)
 export const getStats = () => api.get('/admin/stats').then((r) => r.data)
 export const getCharts = () => api.get('/admin/charts').then((r) => r.data)
 export const getAnalisis = () => api.get('/admin/analisis').then((r) => r.data)
+export const getVisitantes = () => api.get('/admin/visitantes').then((r) => r.data)
 export const getTheme = () => api.get('/admin/theme').then((r) => r.data)
 export const setTheme = (theme) => api.put('/admin/theme', { theme }).then((r) => r.data)
 

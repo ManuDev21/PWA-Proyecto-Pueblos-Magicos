@@ -6,9 +6,9 @@ Capa 2: Clasificación IA con Random Forest, KNN y Decision Tree
         entrenados sobre datos sintéticos generados a partir de
         distribuciones de afinidad por perfil turístico.
 
-Características (features): vector de 5 dimensiones con el conteo de
-respuestas por categoría -> [Cultural, Gastronómico, Ecológico,
-Comunitario, Bienestar].
+Características (features): vector de 4 dimensiones con el conteo de
+respuestas por categoría -> [Histórico-Cultural, Naturaleza y Mar,
+Miradores y Fotografía, Comunidad e Inclusión].
 """
 from __future__ import annotations
 
@@ -22,20 +22,18 @@ from sklearn.tree import DecisionTreeClassifier
 
 # Orden canónico de categorías (features)
 CATEGORIES: list[str] = [
-    "Cultural",
-    "Gastronómico",
-    "Ecológico",
-    "Comunitario",
-    "Bienestar",
+    "Histórico-Cultural",
+    "Naturaleza y Mar",
+    "Miradores y Fotografía",
+    "Comunidad e Inclusión",
 ]
 
 # Mapeo categoría dominante -> perfil turístico
 CATEGORY_TO_PROFILE: dict[str, str] = {
-    "Cultural": "Explorador Cultural",
-    "Gastronómico": "Viajero Gastronómico",
-    "Ecológico": "Ecoturista",
-    "Comunitario": "Descubridor Comunitario",
-    "Bienestar": "Buscador de Bienestar",
+    "Histórico-Cultural": "Explorador Cultural",
+    "Naturaleza y Mar": "Amante de la Naturaleza",
+    "Miradores y Fotografía": "Cazador de Paisajes",
+    "Comunidad e Inclusión": "Espíritu Comunitario",
 }
 
 PROFILES: list[str] = [CATEGORY_TO_PROFILE[c] for c in CATEGORIES]
@@ -143,11 +141,10 @@ class RecommenderEngine:
         top = [c for c, v in ordered[:3] if v > 0]
         afinidades = ", ".join(top[:-1]) + (f" y {top[-1]}" if len(top) > 1 else "")
         rasgos = {
-            "Explorador Cultural": "actividades culturales, históricas y patrimoniales",
-            "Viajero Gastronómico": "experiencias culinarias y sabores locales",
-            "Ecoturista": "naturaleza, conservación y ecosistemas",
-            "Descubridor Comunitario": "tradiciones vivas y convivencia con la comunidad",
-            "Buscador de Bienestar": "calma, equilibrio y experiencias de bienestar",
+            "Explorador Cultural": "historia, patrimonio y leyendas de la isla",
+            "Amante de la Naturaleza": "playas, vida marina y paisajes naturales",
+            "Cazador de Paisajes": "miradores, fotografía y vistas al mar Caribe",
+            "Espíritu Comunitario": "valores, inclusión y la vida de la comunidad isleña",
         }[perfil]
         return (
             f"Te identificamos como «{perfil}» con una confianza del {confidence:.0f}%. "

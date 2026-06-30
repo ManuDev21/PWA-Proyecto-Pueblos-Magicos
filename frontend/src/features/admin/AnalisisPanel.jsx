@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { motion } from 'framer-motion'
 import { getAnalisis } from '../../lib/api'
 import { useT } from '../../i18n/useT'
 
@@ -15,6 +16,8 @@ export default function AnalisisPanel() {
           <thead className="bg-[var(--c-primary-deep)]/60 text-sm">
             <tr>
               <th className="p-3">#</th>
+              <th className="p-3">{t('admin.ia.visitanteId')}</th>
+              <th className="p-3">{t('admin.ia.visitanteNombre')}</th>
               <th className="p-3">{t('admin.ia.perfil')}</th>
               <th className="p-3">{t('admin.ia.confianza')}</th>
               <th className="p-3">{t('admin.ia.modelo')}</th>
@@ -23,9 +26,21 @@ export default function AnalisisPanel() {
             </tr>
           </thead>
           <tbody>
-            {analisis.map((a) => (
-              <tr key={a.id} className="border-t border-white/10 align-top">
+            {analisis.map((a, i) => (
+              <motion.tr
+                key={a.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.04 }}
+                className="border-t border-white/10 align-top hover:bg-white/5"
+              >
                 <td className="p-3">{a.id}</td>
+                <td className="p-3 text-sm">
+                  <span className="rounded-full bg-[var(--c-accent)]/20 px-2 py-1 text-xs font-semibold text-[var(--c-accent)]">
+                    #{a.visitante_id}
+                  </span>
+                </td>
+                <td className="p-3 font-medium">{a.visitante_nombre || '—'}</td>
                 <td className="p-3 font-medium">{a.perfil_detectado}</td>
                 <td className="p-3">
                   <span className="rounded-full bg-[var(--c-secondary)] px-2 py-1 text-xs font-semibold text-[var(--c-primary-deep)]">
@@ -37,11 +52,11 @@ export default function AnalisisPanel() {
                 <td className="p-3 text-xs text-[var(--c-cream)]/60">
                   {new Date(a.fecha_analisis).toLocaleString(locale)}
                 </td>
-              </tr>
+              </motion.tr>
             ))}
             {!analisis.length && (
               <tr>
-                <td colSpan={6} className="p-6 text-center text-[var(--c-cream)]/60">
+                <td colSpan={8} className="p-6 text-center text-[var(--c-cream)]/60">
                   {t('admin.ia.empty')}
                 </td>
               </tr>
