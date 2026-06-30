@@ -14,7 +14,7 @@ import { showComingSoon } from '../../lib/alerts'
 const PYRAMID_ROWS = [
   ['Í', 'X', 'A'],
   ['P', 'U', 'E', 'B', 'L', 'O', 'S'],
-  ['!', 'M', 'A', 'G', 'I', 'C', 'O', 'S', '!'],
+  ['¡', 'M', 'Á', 'G', 'I', 'C', 'O', 'S', '!'],
 ]
 
 /**
