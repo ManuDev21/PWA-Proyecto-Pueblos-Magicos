@@ -191,7 +191,7 @@ export default function SplashScreen({ onFinish }) {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.7 }}
-              className="max-w-xl text-justify font-display text-2xl text-gradient-gold"
+              className="max-w-xl text-center font-display text-2xl text-gradient-gold"
             >
               {t('splash.welcome')}
             </motion.p>
